@@ -4,14 +4,16 @@ let router = express.Router();
 let mongoose = require("mongoose");
 let interactiveObjectSchema = require("../models/interactive-object.model").interactiveObjectSchema;
 const fs = require("fs")
+const path = require("path")
+
 router.get("/objectLabelsMCQ", async (req, res) => {
     res.status(200).json(
         [
-            { question: "text" },
-            { optionText: "text" },
-            { chosenFeedback: "text" },
-            { notChosenFeedback: "text" },
-            { tip: "text" },
+            { _question_: "text" },
+            { _option_: "text" },
+            { _chosenFeedback_: "text" },
+            { _notChosenFeedback_: "text" },
+            { _tip_: "text" },
             { correct: "text" },
         ]
     )
@@ -24,36 +26,26 @@ router.post("/saveObjectMCQ/:id", async (req, res) => {
     const newObj = {}
     
     newObj.type = "MCQ"
-    const parameters = { question: "", answers: [] }
-    const h5pString = { question: "", answers: [] }
+    const parameters = { _question_: "", answers: [] }
     for (let item of objectElements) {
         let key = Object.keys(item)[0]
 
-        if (key === "question") {
-            parameters.question = item[key]
-            h5pString.question = `<p>${item[key]}</p>`
-        } else if (key === "optionText") {
-            parameters.answers.push({ text: item[key], correct: false, tipsAndFeedback: {} })
-            h5pString.answers.push({ text: `<div>${item[key]}</div>\\n`, correct: false, tipsAndFeedback: {} })
-        } else if (key === "chosenFeedback") {
-            parameters.answers[parameters.answers.length - 1]["tipsAndFeedback"]["chosenFeedback"] = item[key]
-            h5pString.answers[h5pString.answers.length - 1]["tipsAndFeedback"]["chosenFeedback"] = `<div>\\n<div>\\n<div>${item[key]}</div>\\n</div>\\n</div>\\n`
-        } else if (key === "notChosenFeedback") {
-            parameters.answers[parameters.answers.length - 1]["tipsAndFeedback"]["notChosenFeedback"] = item[key]
-            h5pString.answers[h5pString.answers.length - 1]["tipsAndFeedback"]["notChosenFeedback"] = `<div>\\n<div>\\n<div>${item[key]}</div>\\n</div>\\n</div>\\n`
-        } else if (key === "tip") {
-            parameters.answers[parameters.answers.length - 1]["tipsAndFeedback"]["tip"] = item[key]
-            h5pString.answers[h5pString.answers.length - 1]["tipsAndFeedback"]["tip"] = `<p>${item[key]}</p>\\n`
+        if (key === "_question_") {
+            parameters['_question_'] = item[key]
+        } else if (key === "_option_") {
+            parameters.answers.push({ _option_: item[key], correct: false })
+        } else if (key === "_chosenFeedback_") {
+            parameters.answers[parameters.answers.length - 1]["_chosenFeedback_"] = item[key]
+        } else if (key === "_notChosenFeedback_") {
+            parameters.answers[parameters.answers.length - 1]["_notChosenFeedback_"] = item[key]
+        } else if (key === "_tip_") {
+            parameters.answers[parameters.answers.length - 1]["_tip_"] = item[key]
         } else if (key === "correct") {
             parameters.answers[parameters.answers.length - 1]["correct"] = item[key]
-            h5pString.answers[h5pString.answers.length - 1]["correct"] = item[key]
             newObj.isAnswered = 'g'
         }
     }
-    h5pString.answers = JSON.stringify(h5pString.answers).replace(/\\\\/g, "\\")
-
     newObj.parameters = parameters
-    newObj.h5pString = h5pString
     interactiveObjectSchema.updateOne(
     { _id: id },
     {

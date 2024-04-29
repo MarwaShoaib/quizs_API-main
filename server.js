@@ -3,6 +3,10 @@ const express = require("express")
 const interactiveObjectsController = require("./controllers/interactive-objects.controller")
 const interactivequizsController = require("./controllers/interactive-quizs.controller")
 const MCQController = require("./controllers/MCQ.controller")
+const ImageChoiceController = require("./controllers/ImageChoice.controller")
+const DragTheWordsController = require("./controllers/DragTheWords.controller")
+const FillTheBlankController = require("./controllers/FillTheBlank.controller")
+const DictationController = require("./controllers/Dictation.controller")
 const questionTypesController = require("./controllers/objectTypes.controller")
 const uploadFileController = require("./controllers/upload-file")
 const bodyparser = require("body-parser")
@@ -35,7 +39,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 app.use(cors())
 app.use('/uploads', express.static('uploads'))
 app.use('/templates', express.static('templates'))
-
+app.use(express.json({limit: '50mb'}))
 app.use(
   bodyparser.urlencoded({
     extended: true,
@@ -55,6 +59,10 @@ app.use("/api", [
   interactiveObjectsController,
   interactivequizsController,
   MCQController,
+  ImageChoiceController,
+  DragTheWordsController,
+  FillTheBlankController,
+  DictationController,
   questionTypesController,
   uploadFileController
 ])

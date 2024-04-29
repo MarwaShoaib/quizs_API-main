@@ -12,7 +12,11 @@ router.get("/interactive-object-types", async (req, res) => {
   );
   res.status(200).json(typeNames);
 });
-
+router.get("/onlyQuestion", async (req, res) => {
+ // const { isAnswered } = req.body
+  let obj = await InteractiveObjectTypeSchema.find({questionOrExplanation:"Q"});
+  res.status(200).json(obj);
+});
 router.post("/interactive-object-types", async (req, res) => {
   let newObj = {};
   const existingObjectType = await InteractiveObjectTypeSchema.find({
