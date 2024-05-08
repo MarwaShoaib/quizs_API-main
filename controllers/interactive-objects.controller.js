@@ -274,7 +274,6 @@ router.get("/isAnswered", async (req, res) => {
   let obj = await interactiveObjectSchema.find({isAnswered:"g"});
   res.status(200).json(obj);
 });
-
 router.post("/interactive-objects", async (req, res) => {
   //post the id of quiz as params
   const newObj = new interactiveObjectSchema({ _id: false });
@@ -289,7 +288,6 @@ router.post("/interactive-objects", async (req, res) => {
       else newObj[key] = req.body[key];
     }
   }
-  
  
   newObj.save(async( err, doc) => {
     if (!err) {
@@ -363,10 +361,10 @@ router.get("/createObject/:id", async (req, res) => {
     if (!error && response.statusCode == 200) {
         var html = body;
         for (let key in templateJson) {
-          let replacedText = templateJson[key];
-         // replacedText = replacedText.substring(1, replacedText.length-1)
-          let newText = h5pString[key]
-         // newText = newText.substring(1, newText.length-1)
+          let replacedText = JSON.stringify(templateJson[key])
+          replacedText = replacedText.substring(1, replacedText.length-1)
+          let newText = JSON.stringify(h5pString[key])
+          newText = newText.substring(1, newText.length-1)
           html = html.replace(replacedText, newText);
         }
         const outputPath = path.join(`${__dirname}/../uploads/${questionName}.html`)

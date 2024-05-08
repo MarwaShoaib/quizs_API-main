@@ -9,6 +9,7 @@ const path = require("path")
 router.get("/objectLabelsMCQ", async (req, res) => {
     res.status(200).json(
         [
+           
             { _question_: "text" },
             { _option_: "text" },
             { _chosenFeedback_: "text" },

@@ -3,6 +3,7 @@ const express = require("express")
 const interactiveObjectsController = require("./controllers/interactive-objects.controller")
 const interactivequizsController = require("./controllers/interactive-quizs.controller")
 const MCQController = require("./controllers/MCQ.controller")
+const TopicsController = require("./controllers/topics.controller")
 const ImageChoiceController = require("./controllers/ImageChoice.controller")
 const DragTheWordsController = require("./controllers/DragTheWords.controller")
 const FillTheBlankController = require("./controllers/FillTheBlank.controller")
@@ -64,5 +65,6 @@ app.use("/api", [
   FillTheBlankController,
   DictationController,
   questionTypesController,
+  TopicsController,
   uploadFileController
 ])
